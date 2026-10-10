@@ -1,0 +1,303 @@
+
+<div id="zee-age-app">
+  <style>
+    #zee-age-app {
+      --accent: #7c5cff;
+      --bg: #0b1020;
+      color: #f7f8ff;
+      font-family: Inter, system-ui, Arial, sans-serif;
+      max-width: 1000px;
+      margin: 20px auto;
+      line-height: 1.5;
+    }
+    #zee-age-app * { box-sizing: border-box; }
+    #zee-age-app .age-shell {
+      background: radial-gradient(ellipse at top, #20244b 0%, #10172c 45%, #090d19 100%);
+      border: 1px solid #33395a;
+      border-radius: 24px;
+      padding: clamp(18px, 4vw, 38px);
+      overflow: hidden;
+    }
+    #zee-age-app .age-hero { text-align: center; margin-bottom: 30px; }
+    #zee-age-app .age-tag {
+      display: inline-block; color: #c9bdff; background: #28234d;
+      padding: 6px 13px; border-radius: 30px; font-size: 12px;
+      letter-spacing: 1.5px; font-weight: 700;
+    }
+    #zee-age-app h1 {
+      font-size: clamp(30px, 5vw, 48px); line-height: 1.15;
+      margin: 17px 0 12px; color: #fff; letter-spacing: -1.5px;
+    }
+    #zee-age-app .age-gradient {
+      background: linear-gradient(90deg, #a99aff, #56d9ff);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    #zee-age-app .age-sub { color: #b6bfd7; font-size: 15px; margin: 0; }
+    #zee-age-app .age-panel {
+      background: #141b31; border: 1px solid #303955;
+      border-radius: 18px; padding: 22px; margin-bottom: 20px;
+    }
+    #zee-age-app .age-label { display: block; color: #e7e9ff; font-weight: 650; margin-bottom: 10px; }
+    #zee-age-app input[type="date"] {
+      width: 100%; min-height: 52px; border: 1px solid #424b70;
+      background: #0d1325; color: #fff; border-radius: 12px;
+      padding: 12px; font: inherit; color-scheme: dark;
+    }
+    #zee-age-app .age-btn {
+      width: 100%; min-height: 51px; margin-top: 15px;
+      border: 0; border-radius: 12px; background: linear-gradient(100deg, #7958ff, #4b8dff);
+      color: white; font-size: 16px; font-weight: 750; cursor: pointer;
+      transition: transform .2s, filter .2s;
+    }
+    #zee-age-app .age-btn:hover { transform: translateY(-2px); filter: brightness(1.12); }
+    #zee-age-app .age-error { color: #ff9999; font-size: 13px; margin: 10px 0 0; }
+    #zee-age-app .age-results { display: none; }
+    #zee-age-app .age-results.show { display: block; animation: zeeFade .45s ease; }
+    @keyframes zeeFade { from {opacity:0; transform:translateY(8px)} to {opacity:1; transform:translateY(0)} }
+    #zee-age-app .age-main-result {
+      text-align: center; padding: 25px 12px; margin-bottom: 20px;
+      border-radius: 18px; background: linear-gradient(135deg, #29224f, #152e4c);
+      border: 1px solid #4a477e;
+    }
+    #zee-age-app .age-main-result small { color: #c9c8ed; }
+    #zee-age-app .age-number {
+      display: block; font-size: clamp(38px, 8vw, 65px); font-weight: 850;
+      letter-spacing: -2px; line-height: 1.2; margin: 10px 0;
+      overflow-wrap: anywhere;
+    }
+    #zee-age-app .age-number span { color: #9e91ff; }
+    #zee-age-app .age-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px;
+    }
+    #zee-age-app .age-stat {
+      min-width: 0; padding: 18px 10px; border-radius: 14px;
+      background: #151d33; border: 1px solid #303955; text-align: center;
+    }
+    #zee-age-app .age-stat .value {
+      display: block; color: #9eafff; font-size: clamp(21px, 4vw, 29px);
+      font-weight: 800; overflow-wrap: anywhere;
+    }
+    #zee-age-app .age-stat .label { display: block; color: #b8c0d7; font-size: 12px; margin-top: 5px; }
+    #zee-age-app .age-section-title { font-size: 19px; margin: 26px 0 13px; color: #fff; }
+    #zee-age-app .age-birthday {
+      background: #151d33; border: 1px solid #303955; border-radius: 14px;
+      padding: 18px; color: #d9def3; text-align: center;
+    }
+    #zee-age-app .age-birthday strong { display: block; font-size: 23px; color: #75dcff; margin: 6px 0; }
+    #zee-age-app .age-note { font-size: 12px; color: #9da9c5; text-align: center; margin: 22px 0 0; }
+    @media (max-width: 520px) {
+      #zee-age-app .age-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      #zee-age-app .age-panel { padding: 16px; }
+      #zee-age-app .age-shell { border-radius: 17px; }
+    }
+  </style>
+
+  <div class="age-shell">
+    <header class="age-hero">
+      <span class="age-tag">✦ FREE ONLINE TOOL</span>
+      <h1>Advanced <span class="age-gradient">Age Calculator</span></h1>
+      <p class="age-sub">Discover your exact age down to the second.</p>
+    </header>
+
+    <section class="age-panel">
+      <label class="age-label" for="zee-dob">🎂 Enter your date of birth</label>
+      <input id="zee-dob" type="date" aria-label="Date of birth">
+      <button class="age-btn" id="zee-calculate" type="button">Calculate My Age ✨</button>
+      <p class="age-error" id="zee-error" role="alert"></p>
+    </section>
+
+    <section class="age-results" id="zee-results" aria-live="polite">
+      <div class="age-main-result">
+        <small>YOUR EXACT AGE</small>
+        <div class="age-number" id="zee-age-main">—</div>
+        <small id="zee-birth-label"></small>
+      </div>
+
+      <h2 class="age-section-title">⏳ Your Age Breakdown</h2>
+      <div class="age-grid">
+        <div class="age-stat"><span class="value" id="zee-years">—</span><span class="label">Years</span></div>
+        <div class="age-stat"><span class="value" id="zee-months">—</span><span class="label">Months</span></div>
+        <div class="age-stat"><span class="value" id="zee-days">—</span><span class="label">Days</span></div>
+        <div class="age-stat"><span class="value" id="zee-hours">—</span><span class="label">Total Hours</span></div>
+        <div class="age-stat"><span class="value" id="zee-minutes">—</span><span class="label">Total Minutes</span></div>
+        <div class="age-stat"><span class="value" id="zee-seconds">—</span><span class="label">Total Seconds</span></div>
+        <div class="age-stat"><span class="value" id="zee-weeks">—</span><span class="label">Full Weeks</span></div>
+        <div class="age-stat"><span class="value" id="zee-total-days">—</span><span class="label">Total Days</span></div>
+        <div class="age-stat"><span class="value" id="zee-next-age">—</span><span class="label">Next Birthday Age</span></div>
+      </div>
+
+      <h2 class="age-section-title">🎉 Next Birthday Countdown</h2>
+      <div class="age-birthday">
+        Time remaining until your next birthday
+        <strong id="zee-countdown">—</strong>
+        <span id="zee-next-date"></span>
+      </div>
+    </section>
+
+    <p class="age-note">Free Age Calculator · Private calculations · Results update live while this page is open</p>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.getElementById('zee-age-app');
+      if (!root || root.dataset.ready) return;
+      root.dataset.ready = '1';
+
+      const $ = id => root.querySelector('#' + id);
+      const dobInput = $('zee-dob');
+      const results = $('zee-results');
+      const error = $('zee-error');
+      let birth = null;
+      let timer = null;
+
+      const pad = n => String(n).padStart(2, '0');
+      const fmt = n => Math.floor(n).toLocaleString();
+
+      function dateFromInput(value) {
+        const parts = value.split('-').map(Number);
+        if (parts.length !== 3 || parts.some(n => !n)) return null;
+        const d = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0, 0);
+        if (d.getFullYear() !== parts[0] ||
+            d.getMonth() !== parts[1] - 1 ||
+            d.getDate() !== parts[2]) return null;
+        return d;
+      }
+
+      // Add calendar months without overflowing into the following month.
+      function addMonths(date, count) {
+        const result = new Date(date);
+        const day = result.getDate();
+        result.setDate(1);
+        result.setMonth(result.getMonth() + count);
+        const lastDay = new Date(
+          result.getFullYear(), result.getMonth() + 1, 0
+        ).getDate();
+        result.setDate(Math.min(day, lastDay));
+        return result;
+      }
+
+      function getAge(start, now) {
+        let years = now.getFullYear() - start.getFullYear();
+        let cursor = new Date(start);
+        cursor.setFullYear(start.getFullYear() + years);
+
+        // Handle leap-day birthdays consistently with JavaScript's calendar.
+        while (cursor > now) {
+          years--;
+          cursor = new Date(start);
+          cursor.setFullYear(start.getFullYear() + years);
+        }
+
+        let months = (now.getFullYear() - cursor.getFullYear()) * 12
+          + now.getMonth() - cursor.getMonth();
+        let monthCursor = addMonths(cursor, months);
+
+        while (monthCursor > now) {
+          months--;
+          monthCursor = addMonths(cursor, months);
+        }
+
+        cursor = monthCursor;
+        let days = 0;
+        while (days < 32) {
+          const next = new Date(cursor);
+          next.setDate(next.getDate() + 1);
+          if (next > now) break;
+          cursor = next;
+          days++;
+        }
+
+        let remaining = Math.max(0, now.getTime() - cursor.getTime());
+        const hours = Math.floor(remaining / 3600000);
+        remaining -= hours * 3600000;
+        const minutes = Math.floor(remaining / 60000);
+        remaining -= minutes * 60000;
+        const seconds = Math.floor(remaining / 1000);
+
+        return { years, months, days, hours, minutes, seconds };
+      }
+
+      function getNextBirthday(start, now) {
+        let year = now.getFullYear();
+        function birthdayIn(y) {
+          const month = start.getMonth();
+          const day = start.getDate();
+          const last = new Date(y, month + 1, 0).getDate();
+          return new Date(y, month, Math.min(day, last));
+        }
+        let next = birthdayIn(year);
+        if (next <= now) next = birthdayIn(year + 1);
+        return next;
+      }
+
+      function update() {
+        if (!birth) return;
+        const now = new Date();
+        if (now < birth) return;
+
+        const age = getAge(birth, now);
+        const elapsed = Math.max(0, now.getTime() - birth.getTime());
+        const totalSeconds = Math.floor(elapsed / 1000);
+        const totalMinutes = Math.floor(elapsed / 60000);
+        const totalHours = Math.floor(elapsed / 3600000);
+        const totalDays = Math.floor(elapsed / 86400000);
+
+        $('zee-age-main').innerHTML =
+          '<span>' + age.years + '</span> years';
+        $('zee-years').textContent = fmt(age.years);
+        $('zee-months').textContent = fmt(age.months);
+        $('zee-days').textContent = fmt(age.days);
+        $('zee-hours').textContent = fmt(totalHours);
+        $('zee-minutes').textContent = fmt(totalMinutes);
+        $('zee-seconds').textContent = fmt(totalSeconds);
+        $('zee-weeks').textContent = fmt(Math.floor(totalDays / 7));
+        $('zee-total-days').textContent = fmt(totalDays);
+
+        const next = getNextBirthday(birth, now);
+        const nextAge = next.getFullYear() - birth.getFullYear();
+        $('zee-next-age').textContent = fmt(nextAge);
+
+        const msLeft = next.getTime() - now.getTime();
+        const secsLeft = Math.max(0, Math.floor(msLeft / 1000));
+        const daysLeft = Math.floor(secsLeft / 86400);
+        const hoursLeft = Math.floor((secsLeft % 86400) / 3600);
+        const minsLeft = Math.floor((secsLeft % 3600) / 60);
+        const secondsLeft = secsLeft % 60;
+
+        $('zee-countdown').textContent =
+          daysLeft + ' days, ' + pad(hoursLeft) + ':' +
+          pad(minsLeft) + ':' + pad(secondsLeft);
+        $('zee-next-date').textContent = 'Birthday: ' +
+          next.toLocaleDateString(undefined, {
+            year: 'numeric', month: 'long', day: 'numeric'
+          });
+      }
+
+      $('zee-calculate').addEventListener('click', function () {
+        error.textContent = '';
+        const parsed = dateFromInput(dobInput.value);
+
+        if (!parsed) {
+          error.textContent = 'Please select a valid date of birth.';
+          return;
+        }
+        if (parsed > new Date()) {
+          error.textContent = 'Date of birth cannot be in the future.';
+          return;
+        }
+
+        birth = parsed;
+        results.classList.add('show');
+        update();
+        if (timer) clearInterval(timer);
+        timer = setInterval(update, 1000);
+      });
+
+      dobInput.max = [
+        new Date().getFullYear(),
+        pad(new Date().getMonth() + 1),
+        pad(new Date().getDate())
+      ].join('-');
+    })();
+  </script>
+</div>
